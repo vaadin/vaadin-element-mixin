@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="import" href="../vaadin-button/vaadin-button.html">
+</head>
+<body>
+  <vaadin-button>Button</vaadin-button>
+
+  <script>
+    document.querySelector('vaadin-button').whenAttached(e => console.log(e));
+
+    const button = document.createElement('vaadin-button')
+    button.innerText = 'Button 2';
+    button.whenAttached(e => console.log(e));
+
+    setTimeout(() => document.body.appendChild(button), 1000);
+  </script>
+</body>
+</html>

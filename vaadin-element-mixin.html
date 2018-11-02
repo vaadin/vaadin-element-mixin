@@ -53,6 +53,45 @@ Vaadin.ElementMixin = superClass => class VaadinElementMixin extends superClass 
         'Vaadin components require the "standards mode" declaration. Please add <!DOCTYPE html> to the HTML document.'
       );
     }
+
+    this.addEventListener('animationend', this.__onInvokeWhenAttachedAnimationEnd);
   }
+
+  whenAttached(f) {
+    this.__whenAttachedFunctions = this.__whenAttachedFunctions || [];
+    this.__whenAttachedFunctions.push(f);
+
+    if (this.clientHeight > 0 ) {
+      this.__invokeWhenAttached();
+    }
+  }
+
+  __invokeWhenAttached() {
+    (this.__whenAttachedFunctions || []).forEach(f => f(this));
+    this.__whenAttachedFunctions = [];
+  }
+
+  __onInvokeWhenAttachedAnimationEnd(e) {
+    if (e.animationName.indexOf('when-attached-animation') === 0) {
+      this.__invokeWhenAttached();
+    }
+  }
+
 };
 </script>
+
+<dom-module id="when-attached-styles" theme-for="vaadin-*">
+  <template>
+    <style>
+      @keyframes when-attached-animation {
+        to {
+          opacity: 1;
+        }
+      }
+
+      :host {
+        animation: 0ms when-attached-animation;
+      }
+    </style>
+  </template>
+</dom-module>
