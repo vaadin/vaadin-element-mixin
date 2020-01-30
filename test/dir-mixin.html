@@ -132,6 +132,38 @@
           element
         )).to.be.true;
       });
+
+      // These tests are here to ensure consistency in different browsers behaviour
+      describe('scrollLeft', function() {
+
+        before(() => {
+          element.style.width = '100px';
+          element.style.height = '1px';
+          element.style.position = 'absolute';
+          element.style.overflowX = 'auto';
+          element.style.top = '0';
+
+          const childDiv = document.createElement('div');
+          childDiv.style.width = '200px';
+          childDiv.style.height = '1px';
+
+          element.appendChild(childDiv);
+        });
+
+        it('should get normalized value of the scrollLeft in rtl mode', async() => {
+          setDir('rtl');
+          await nextRender(element);
+          expect(element.__getNormalizedScrollLeft(element)).to.equal(100);
+        });
+
+        it('should set normalized value of the scrollLeft in rtl mode', async() => {
+          setDir('rtl');
+          await nextRender(element);
+          element.__setNormalizedScrollLeft(element, 50);
+          expect(element.__getNormalizedScrollLeft(element)).to.equal(50);
+        });
+      });
+
     });
   </script>
 </body>
