@@ -13,7 +13,7 @@
     });
   };
 
-  const scrollType = Vaadin.DirHelper._detectScrollType();
+  const scrollType = Vaadin.DirHelper.detectScrollType();
 
   const directionObserver = new MutationObserver(directionUpdater);
   directionObserver.observe(document.documentElement, {attributes: true, attributeFilter: ['dir']});
