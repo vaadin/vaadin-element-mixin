@@ -12,7 +12,7 @@ window.Vaadin.registrations = window.Vaadin.registrations || [];
 
 window.Vaadin.developmentModeCallback = window.Vaadin.developmentModeCallback || {};
 
-window.Vaadin.developmentModeCallback['vaadin-usage-statistics'] = function() {
+window.Vaadin.developmentModeCallback['vaadin-usage-statistics'] = function () {
   usageStatistics();
 };
 
@@ -24,35 +24,34 @@ const registered = new Set();
  * @polymerMixin
  * @mixes DirMixin
  */
-export const ElementMixin = superClass => class VaadinElementMixin extends DirMixin(superClass) {
-  /** @protected */
-  static finalize() {
-    super.finalize();
+export const ElementMixin = (superClass) =>
+  class VaadinElementMixin extends DirMixin(superClass) {
+    /** @protected */
+    static finalize() {
+      super.finalize();
 
-    const {is} = this;
+      const { is } = this;
 
-    // Registers a class prototype for telemetry purposes.
-    if (is && !registered.has(is)) {
-      window.Vaadin.registrations.push(this);
-      registered.add(is);
+      // Registers a class prototype for telemetry purposes.
+      if (is && !registered.has(is)) {
+        window.Vaadin.registrations.push(this);
+        registered.add(is);
 
-      if (window.Vaadin.developmentModeCallback) {
-        statsJob = Debouncer.debounce(statsJob,
-          idlePeriod, () => {
+        if (window.Vaadin.developmentModeCallback) {
+          statsJob = Debouncer.debounce(statsJob, idlePeriod, () => {
             window.Vaadin.developmentModeCallback['vaadin-usage-statistics']();
-          }
-        );
-        enqueueDebouncer(statsJob);
+          });
+          enqueueDebouncer(statsJob);
+        }
       }
     }
-  }
 
-  constructor() {
-    super();
-    if (document.doctype === null) {
-      console.warn(
-        'Vaadin components require the "standards mode" declaration. Please add <!DOCTYPE html> to the HTML document.'
-      );
+    constructor() {
+      super();
+      if (document.doctype === null) {
+        console.warn(
+          'Vaadin components require the "standards mode" declaration. Please add <!DOCTYPE html> to the HTML document.'
+        );
+      }
     }
-  }
-};
+  };

@@ -44,9 +44,9 @@ class DirHelper {
    * @param {string} direction current direction of the element
    * @param {Element} element
    * @return {number} the scrollLeft value.
-  */
+   */
   static getNormalizedScrollLeft(scrollType, direction, element) {
-    const {scrollLeft} = element;
+    const { scrollLeft } = element;
     if (direction !== 'rtl' || !scrollType) {
       return scrollLeft;
     }
