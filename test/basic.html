@@ -4,89 +4,92 @@
   <meta charset="UTF-8">
   <title>vaadin-element-mixin tests</title>
 
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../vaadin-element-mixin.html">
-  <link rel="import" href="../../polymer/polymer-element.html">
+  <script src="../../../wct-browser-legacy/browser.js"></script>
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script type="module" src="../vaadin-element-mixin.js"></script>
+  <script type="module" src="../../../@polymer/polymer/polymer-element.js"></script>
 </head>
 
 <body>
-  <script>
-    describe('basic functionality', function() {
+  <script type="module">
+import { ElementMixin } from '../vaadin-element-mixin.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { flush } from '@polymer/polymer/lib/utils/flush.js';
+describe('basic functionality', function() {
 
-      it('should define window.Vaadin', function() {
-        expect(window.Vaadin).to.exist;
-      });
+  it('should define window.Vaadin', function() {
+    expect(window.Vaadin).to.exist;
+  });
 
-      it('should check for development mode', function() {
-        expect(window.Vaadin.developmentMode).to.exist;
-      });
+  it('should check for development mode', function() {
+    expect(window.Vaadin.developmentMode).to.exist;
+  });
 
-      it('should store the class entry in registrations once instance created', function() {
-        class TestFoo extends Vaadin.ElementMixin(Polymer.Element) {
-          static get is() {
-            return 'test-foo';
-          }
-        }
-        customElements.define(TestFoo.is, TestFoo);
-        document.createElement('test-foo');
-        Polymer.flush();
-        expect(window.Vaadin.registrations).to.be.array;
-        expect(window.Vaadin.registrations[0].is).to.equal('test-foo');
-      });
+  it('should store the class entry in registrations once instance created', function() {
+    class TestFoo extends ElementMixin(PolymerElement) {
+      static get is() {
+        return 'test-foo';
+      }
+    }
+    customElements.define(TestFoo.is, TestFoo);
+    document.createElement('test-foo');
+    flush();
+    expect(window.Vaadin.registrations).to.be.array;
+    expect(window.Vaadin.registrations[0].is).to.equal('test-foo');
+  });
 
-      it('should collect usage statistics only on localhost', function() {
-        expect(window.Vaadin.developmentModeCallback).to.exist;
-        expect(window.Vaadin.developmentModeCallback['vaadin-usage-statistics']).to.exist;
-        expect(window.Vaadin.usageStatsChecker).to.exist;
-      });
+  it('should collect usage statistics only on localhost', function() {
+    expect(window.Vaadin.developmentModeCallback).to.exist;
+    expect(window.Vaadin.developmentModeCallback['vaadin-usage-statistics']).to.exist;
+    expect(window.Vaadin.usageStatsChecker).to.exist;
+  });
 
-      it('should be possible to exclude development mode detector', function() {
-        const ref = window.Vaadin.developmentModeCallback;
-        window.Vaadin.developmentModeCallback = undefined;
-        class TestBar extends Vaadin.ElementMixin(Polymer.Element) {
-          static get is() {
-            return 'test-bar';
-          }
-        }
-        // Everything is ok as long as defining the TestBar class does not fail
-        expect(TestBar.is).to.equal('test-bar');
+  it('should be possible to exclude development mode detector', function() {
+    const ref = window.Vaadin.developmentModeCallback;
+    window.Vaadin.developmentModeCallback = undefined;
+    class TestBar extends ElementMixin(PolymerElement) {
+      static get is() {
+        return 'test-bar';
+      }
+    }
+    // Everything is ok as long as defining the TestBar class does not fail
+    expect(TestBar.is).to.equal('test-bar');
 
-        window.Vaadin.developmentModeCallback = ref;
-      });
+    window.Vaadin.developmentModeCallback = ref;
+  });
 
-      it('should collect usage statistics once per class', () => {
-        const spy = sinon.spy(window.Vaadin.usageStatsChecker, 'maybeGatherAndSend');
+  it('should collect usage statistics once per class', () => {
+    const spy = sinon.spy(window.Vaadin.usageStatsChecker, 'maybeGatherAndSend');
 
-        class TestBaz extends Vaadin.ElementMixin(Polymer.Element) {
-          static get is() {
-            return 'test-baz';
-          }
-        }
-        customElements.define(TestBaz.is, TestBaz);
+    class TestBaz extends ElementMixin(PolymerElement) {
+      static get is() {
+        return 'test-baz';
+      }
+    }
+    customElements.define(TestBaz.is, TestBaz);
 
-        const elem1 = document.createElement('test-baz');
-        document.body.appendChild(elem1);
-        Polymer.flush();
-        expect(spy).to.be.calledOnce;
+    const elem1 = document.createElement('test-baz');
+    document.body.appendChild(elem1);
+    flush();
+    expect(spy).to.be.calledOnce;
 
-        const elem2 = document.createElement('test-baz');
-        document.body.appendChild(elem2);
-        Polymer.flush();
-        expect(spy).to.be.calledOnce;
+    const elem2 = document.createElement('test-baz');
+    document.body.appendChild(elem2);
+    flush();
+    expect(spy).to.be.calledOnce;
 
-        class TestBaz2 extends Vaadin.ElementMixin(Polymer.Element) {
-          static get is() {
-            return 'test-baz2';
-          }
-        }
-        customElements.define(TestBaz2.is, TestBaz2);
+    class TestBaz2 extends ElementMixin(PolymerElement) {
+      static get is() {
+        return 'test-baz2';
+      }
+    }
+    customElements.define(TestBaz2.is, TestBaz2);
 
-        const elem3 = document.createElement('test-baz2');
-        document.body.appendChild(elem3);
-        Polymer.flush();
-        expect(spy).to.be.calledTwice;
-      });
-    });
-  </script>
+    const elem3 = document.createElement('test-baz2');
+    document.body.appendChild(elem3);
+    flush();
+    expect(spy).to.be.calledTwice;
+  });
+});
+</script>
 </body>
