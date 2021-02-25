@@ -2,13 +2,13 @@ import { expect } from '@esm-bundle/chai';
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { DirMixin } from '../vaadin-dir-mixin.js';
 
-class DitMixinElement extends DirMixin(PolymerElement) {
+class DirMixinElement extends DirMixin(PolymerElement) {
   static get is() {
     return 'dir-mixin-element';
   }
 }
 
-customElements.define(DitMixinElement.is, DitMixinElement);
+customElements.define(DirMixinElement.is, DirMixinElement);
 
 describe('DirMixin', () => {
   const element = document.createElement('dir-mixin-element');
